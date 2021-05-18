@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de recibos</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        td{
+            border: 1px solid #000000;
+        }
+        table{
+            width: 100%;
+            background: whitesmoke;
+            text-align: center;
+        }
+        div.top{
+            background-color: #aaa;
+            position: static;
+            top: 0;
+            width: 100%;
+            height: 45px;
+            display: flex;
+            flex-direction: row;
+        }
+        div.top button{
+            display: inline-block;
+            text-align: center;            
+            vertical-align: middle;
+            padding: 7px;
+        }
+        .input-controller{
+            border: 1px solid #555;
+            margin: auto;
+            text-align: center;
+            padding: 12px 8px;
+        }
+        .input-controller .name-item, .input_text{
+            width: 80%;
+            padding: 5px;
+            margin: 5px 0px;
+        }
+        .input-controller .input-item button{padding: 4px; margin-top: 3px;}
+    </style>
+</head>
+<body>
+    <div class="top">
+        <button onclick="generateReceipt()">Ver</button>
+        <button onclick="copyReceipt()">Copiar</button>  
+        <button onclick="showItens()">Editar</button>
+        <button onclick="deleteList()">Deletar</button>
+        <button onclick="importList()">Importar</button>
+    </div>
+
+    <div class="input-controller">
+        <input type="text" class="name-client" max="14" placeholder="nome cliente">
+
+        <div class="input-item">
+            <input type="text" class="name-item" placeholder="nome produto"><br>
+            <input type="number" class="number-units" placeholder="unidades">
+            <input type="number" class='price-item' placeholder="preço"><br>
+            <button onclick="addItem()">Adicionar a lista</button>           
+        </div>
+
+    </div>
+    <div class="showList" id="showList"></div>
+
+    <script>
+        const showList = document.getElementById('showList')
+        const itemList = localStorage.listRecipe ? memorySave() :  Array()
+
+        const edit = {
+            editing : false,
+            index : -1
+        }
+
+        function memorySave(){
+            return JSON.parse(localStorage.listRecipe)
+        }   
+
+        function saveList(){
+            localStorage.setItem('listRecipe', JSON.stringify(itemList.filter( i => i )))
+        }
+
+
+        function addItem(){
+            const name = document.querySelector('input.name-item').value.trim()
+            const units = Number(document.querySelector('input.number-units').value) || 1 
+            const price = Number(document.querySelector('input.price-item').value)
+
+	        if ( name == '' || price == '' ) return alert('Por favor, complete os campos.')
+
+            if ( edit.editing ){
+                itemList[edit.index] = { name, units, price }
+                objEdit(false, -1)
+            } else {
+                itemList.push({ name, units, price })
+            }
+
+            generateReceipt()//showItens()
+            resetInput()
+        }
+
+        function objEdit(status, index){
+            edit.editing = status
+            edit.index = index
+        }
+
+        function resetInput(){
+            document.querySelector('input.name-item').value = ''
+            document.querySelector('input.number-units').value = ''
+            document.querySelector('input.price-item').value = ''
+        }
+
+        function editItem(index){
+            const item = itemList[index]
+            objEdit(true, index)
+
+            document.querySelector('input.name-item').value = item.name
+            document.querySelector('input.number-units').value = item.units
+            document.querySelector('input.price-item').value = item.price
+        }
+
+        function removeItem(index){
+            delete itemList[index]
+            showItens()
+        }
+
+        function deleteList(){
+            const respost = confirm('Deseja deletar esse recibo?')
+
+            if (respost){
+                localStorage.clear()
+                window.location.reload()
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function showItens(){
+            let total = 0
+            let html = '<table>'
+            html += '<tr><td>produto</td><td>Unidade(s)</td><td>Valor</td></tr>'
+            for ( let i in itemList){
+                const item = itemList[i]
+                html += `<tr><td>${item.name}</td><td>${item.units}</td><td>${item.price}   ||||    `
+                html += `<button onclick="editItem(${i})">Editar</button><button onclick="removeItem(${i})">Remover</button></td></tr>`
+
+                total += item.price * item.units
+            }
+            html += '</table><hr>'
+            html += `Valor total: <b>${formatPrice(total)}</b> (sem taxa de entrega)`
+            showList.innerHTML = html
+            saveList()
+        }
+
+        function formatPrice(val){
+            return Intl.NumberFormat("pt-BR", {style: 'currency', currency: 'BRL'}).format(val)
+        }
+
+        function generateReceipt(){
+            let total = 0
+            const img = '➡️'
+            let html = 'Lista de pedido'
+            for ( let item of itemList ){
+                const value = item.price * item.units
+                html += `<br>${img} ${item.units} ${item.name} : ${item.units} x ${item.price} = ${formatPrice(value)}`
+                total += value
+            }
+            html += `<br><br>Valor total: *<b>${formatPrice(total)}</b>* (sem a taxa de entrega)`
+
+            showList.innerHTML = html
+            saveList()
+        }
+        
+        function copyReceipt(){
+            generateReceipt()
+            const input = document.createElement('textarea');
+            input.innerHTML = showList.innerText;
+            document.body.appendChild(input);
+            input.select(); 
+            const copy = document.execCommand('copy')
+            document.body.removeChild(input);
+            if ( copy ) { alert('Copiado com sucesso.') }
+        }
+
+        function importList(){
+            showList.innerHTML = (`<div class="input-controller"><h1>Importar lista</h1><input type="text" class="input_text"/>
+                                    <br/><button onclick="readText()" class="input_action">Ler texto</button></div>`)       
+        }
+
+        function readText(){
+            const input_text = document.querySelector('.input_text');
+            const text = input_text.value;
+            const imgSeparator = '➡️'
+            const textClean = text.substring(18, text.indexOf('Valor total:'))
+            const textArray = textClean.split(imgSeparator);
+            if ( textArray.length == 1 ) return alert("Sem texto para importar.")
+            generateDataArray(textArray);
+        }
+
+        async function generateDataArray(infos){
+            const response = await deleteList()
+            if ( !response ) return; 
+            const textData = await infos.map(info => itemData(info.trim().split(" "))); //info.trim())
+            //console.log("text data\n",textData)
+            await localStorage.setItem('listRecipe', JSON.stringify(textData.filter( i => i )))
+        }
+
+        function itemData(info){
+            const units = Number(info[ 0 ].toString());
+            const price = Number(info[ info.indexOf("=") - 1 ])
+            const name =  info.slice(info[ info.length - 6 ].indexOf()+2, info.indexOf(":")).join(" ");
+            // console.log(info)
+            return { name, units, price };
+        }
+
+    </script>
+</body>
+</html>
