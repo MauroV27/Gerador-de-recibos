@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de recibos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container-fluid bg-dark p-2 text-white top">
+        <div class="button-group justify-content">
+            <button class="btn btn-header" onclick="generateReceipt()">Ver</button>
+            <button class="btn btn-header" onclick="copyReceipt()">Copiar</button>  
+            <button class="btn btn-header" onclick="showItens()">Editar</button>
+            <button class="btn btn-header" onclick="deleteList()">Deletar</button>
+            <button class="btn btn-header" onclick="importList()">Importar</button>
+        </div>
+    </div>
+
+
+    <div class="container-md">
+        <div class="row p-2 center input-controller">
+            <!-- <input type="text" class="name-client" max="14" placeholder="nome cliente"> -->
+
+            <h1 class="title text-center">Gerador de Recibos</h1>
+            <div class="input-itens">
+                <input type="text" class="col-8 input-item name-item" placeholder="nome produto"><br>
+                <div class="col-8 col-md number-inputs">
+                    <input type="number" min="1" step="1" class="col-5 input-item number-units" placeholder="unidades">
+                    <input type="number" min="0" class='col-5 input-item price-item' placeholder="preço"><br>
+                </div>
+                <button onclick="addItem()" class='input-item'>Adicionar a lista</button>           
+            </div>
+
+        </div>
+        
+        <hr class="row topic-divider">
+        <div class="row showList" id="showList"></div>
+    
+    </div>
+
+    <div class="card-footer footer text-muted text-center">
+        <a href="https://github.com/MauroV27" class="author text-muted">Developed by Mauro Victor</a>
+    </div>
+    
+    <script src="index.js"></script>
+
+</body>
+</html>

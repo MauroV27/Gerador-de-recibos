@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+    font: normal 1em 'Roboto', sans-serif;
+}
+
+html{
+    position: relative;
+    min-height: 100%;  
+}
+
+body {
+    margin: 0 0 30px;
+    padding: 0;
+  }
+
+.btn-header {
+    background-color: beige;
+    font-family: 'Roboto', sans-serif;
+    font: normal 1rem 'Roboto', sans-serif;
+    justify-content: center;
+    color: #333;
+    margin-right: 2px;
+    padding: .5rem .72rem;
+}
+
+.btn-header:hover{
+    font-family: 'Roboto', sans-serif;
+    font: bold 1rem 'Roboto', sans-serif;
+    color: black;
+    padding: .5rem .72rem;
+}
+
+div.showList {
+    height: auto;
+}
+
+.input-controller > h1 {
+    font-family: 'Roboto', sans-serif;
+    font: bold 2em 'Roboto', sans-serif;
+}
+
+.input-itens{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-item{
+    margin: .2rem auto;
+    padding: 0.3em 0.5em;
+    font-family: 'Roboto', sans-serif;
+    font: bold 1em 'Roboto', sans-serif;
+    border: 1px solid #212529;
+    border-radius: .25rem;
+}
+
+.number-inputs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+button.input-item{
+    width: 12em;
+    background-color: #212529;
+    border-radius: .25rem;
+    color: whitesmoke;
+}
+
+hr.topic-divider {
+    /* border-top: 4px solid #212529; */
+    margin-top: 0;
+    border: none;
+    opacity: 1;
+    height: 4px;
+    background-color: #212529;
+}
+
+hr.recipe-line{    
+    width: 100%;
+    margin: 0.5em auto;
+    border: none;
+    opacity: 1;
+    height: 2px;
+    background-color: #212529;
+}
+
+ul.item-list{
+    list-style: none;
+}
+
+th {
+    font-family: 'Roboto', sans-serif;
+    font: bold 1em 'Roboto', sans-serif;
+}
+
+tr.iten-table-row {
+    vertical-align: middle;
+}
+
+/* td.td-buttons{
+    display: inline;
+} */
+
+.btn-edit{
+    background-color: #212529;
+    border: none;
+    border-radius: .25rem;
+    color: whitesmoke;
+    padding: 4px 4px;
+}
+
+@media (max-width: 500px) {
+    .btn-edit{
+        align-items: center;
+    }
+    .btn-edit:nth-child(2){
+        margin-top: 10px;
+    }
+}
+
+div.import-controller{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: 'Roboto', sans-serif;
+    font: normal 1em 'Roboto', sans-serif;
+}
+
+div.import-controller > h2 {
+    font-family: 'Roboto', sans-serif;
+    font: bold 1.5em 'Roboto', sans-serif;
+}
+
+.import-controller > input.input-item{
+    font-family: 'Roboto', sans-serif;
+    font: normal 1em 'Roboto', sans-serif;
+}
+
+.import-controller > button{
+    width: 8em;
+}
+
+div.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    margin-top: 100px;
+    overflow: hidden;
+}
+
+div.footer:after{
+    margin-top: 100px;
+}
+
+a.author{
+    text-decoration: none;
+    color: #333;
+}
+
+.margin-botton{
+    margin-bottom: 40px;
+}
