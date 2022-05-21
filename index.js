@@ -98,7 +98,7 @@ function formatPrice(val){
 function generateReceipt(){
     let total = 0
     const img = '➡️'
-    let html = '<p><b>Lista de pedido:</b></p>'
+    let html = '<div id="product-list"><p><b>Lista de pedido:</b></p>'
     html += '<ul class="item-list">'
     for ( let item of itemList ){
         if ( item != undefined ) {
@@ -108,21 +108,37 @@ function generateReceipt(){
         }
     }
     html += "</ul>"
-    html += `<hr class="recipe-line"><p class="margin-botton">Valor total: *<b>${formatPrice(total)}</b>* (sem a taxa de entrega)</p>`
+    html += `<hr class="recipe-line"><p class="margin-botton">Valor total: *<b>${formatPrice(total)}</b>* (sem a taxa de entrega)</p></div>`
+    html += '<button onclick="copyReceipt()" class="input-item">Copiar texto</button>'
 
     showList.innerHTML = html
     saveList()
 }
 
 function copyReceipt(){
-    generateReceipt()
-    const input = document.createElement('textarea');
-    input.innerHTML = showList.innerText;
-    document.body.appendChild(input);
-    input.select(); 
-    const copy = document.execCommand('copy')
-    document.body.removeChild(input);
-    if ( copy ) { alert('Copiado com sucesso.') }
+    // generateReceipt()
+    const input = document.createElement('textarea');  //Create a text area element for locate all list text
+    const productList = document.getElementById("product-list");
+
+    if (!navigator.clipboard){
+        input.innerHTML = productList.innerText;
+        document.body.appendChild(input);
+        
+        input.select(); 
+        const copy = document.execCommand('copy')
+        document.body.removeChild(input);
+        if ( copy ) { alert('Copiado com sucesso.') }
+
+    } else{
+        navigator.clipboard.writeText(productList.innerText).then(
+            function(){
+                alert("Copiado com sucesso!"); // success 
+            })
+          .catch(
+             function() {
+                alert("Houve um erro! Por favor, tente novamente."); // error
+          });
+    }    
 }
 
 function importList(){
