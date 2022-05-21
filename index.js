@@ -144,33 +144,37 @@ function copyReceipt(){
 function importList(){
     showList.innerHTML = (`<div class="p-2 import-controller">
                             <h2>Importar lista</h2>
-                            <input type="text" class="col-8 input-item" placeholder="Insira uma lista aqui"/>
+                            <input type="text" class="col-8 input-item input-text" placeholder="Insira uma lista aqui"/>
                             <button onclick="readText()" class="input-item">Ler texto</button>
                           </div>`)       
 }
 
 function readText(){
-    const input_text = document.querySelector('.input_text');
+    const input_text = document.querySelector('.input-text');
     const text = input_text.value;
     const imgSeparator = '➡️'
-    const textClean = text.substring(18, text.indexOf('Valor total:'))
+    const textClean = text.substring(20, text.indexOf('Valor total:'))
     const textArray = textClean.split(imgSeparator);
     if ( textArray.length == 1 ) return alert("Sem texto para importar.")
+    // console.log("text array generated: ", textArray)
     generateDataArray(textArray);
 }
 
-async function generateDataArray(infos){
-    const response = await deleteList()
+function generateDataArray(infos){
+    const response = deleteList()
     if ( !response ) return; 
-    const textData = await infos.map(info => itemData(info.trim().split(" "))); //info.trim())
-    //console.log("text data\n",textData)
-    await localStorage.setItem('listRecipe', JSON.stringify(textData.filter( i => i )))
+    const textData = infos.map(info => itemData(info.trim().split(" "))); //info.trim())
+    // console.log("text data\n",textData)
+    for ( product of textData ){
+        itemList.push(product)
+    }
+    // console.log("final:", itemList)
 }
 
 function itemData(info){
     const units = Number(info[ 0 ].toString());
     const price = Number(info[ info.indexOf("=") - 1 ])
     const name =  info.slice(info[ info.length - 6 ].indexOf()+2, info.indexOf(":")).join(" ");
-    // console.log(info)
+    // console.log("info:", info)
     return { name, units, price };
 }
