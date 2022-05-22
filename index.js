@@ -155,7 +155,7 @@ function readText(){
     const imgSeparator = '➡️'
     const textClean = text.substring(20, text.indexOf('Valor total:'))
     const textArray = textClean.split(imgSeparator);
-    if ( textArray.length == 1 ) return alert("Sem texto para importar.")
+    if ( textArray.length <= 1 ) return alert("Sem texto para importar.")
     // console.log("text array generated: ", textArray)
     generateDataArray(textArray);
 }
@@ -165,10 +165,13 @@ function generateDataArray(infos){
     if ( !response ) return; 
     const textData = infos.map(info => itemData(info.trim().split(" "))); //info.trim())
     // console.log("text data\n",textData)
+    itemList.length = 0 // clear array data
     for ( product of textData ){
         itemList.push(product)
     }
-    // console.log("final:", itemList)
+    // console.log("final:") 
+    console.table(itemList)
+    saveList()
 }
 
 function itemData(info){
